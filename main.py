@@ -29,7 +29,7 @@ def get_text_messages(message):
             value = 0.0
         expense += value
         bot.send_message(message.from_user.id, f"{value}/{expense}")
-    elif message.from_user.id in users and '-' in message.text.lower():     # expense
+    elif message.from_user.id in users and '+' not in message.text and ('-' in message.text or 'налич' in message.text.lower() or 'перевод' in message.text.lower()):     # expense
         values = re.findall(r"[-+]?(?:\d*\.*\d+)", message.text.replace(',', '.'))
         try:
             value = sum(abs(float(i)) for i in values)
@@ -37,7 +37,7 @@ def get_text_messages(message):
             value = 0.0
         expense += value
         bot.send_message(message.from_user.id, f"{value}/{expense}")
-    elif message.from_user.id in users and  '+' in message.text:            # income
+    elif message.from_user.id in users and '-' not in message.text and ('+' in message.text or 'зарплата' in message.text.lower()):            # income
         values = re.findall(r"[-+]?(?:\d*\.*\d+)", message.text.replace(',', '.'))
         try:
             value = sum(abs(float(i)) for i in values)
@@ -45,6 +45,8 @@ def get_text_messages(message):
             value = 0.0
         income += value
         bot.send_message(message.from_user.id, f"{value}/{income}")
+#    elif message.text == '/start':
+#        users.append(message.from_user.id)
     else:
         bot.send_message(message.from_user.id, "Я тебя не понимаю.")
     for user in users:
